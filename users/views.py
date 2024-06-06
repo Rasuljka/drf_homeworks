@@ -18,3 +18,4 @@ class PaymentsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ('paid_lesson', 'paid_course', 'pay_transfer')
     ordering_fields = ['pay_date']
+
