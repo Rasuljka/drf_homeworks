@@ -63,6 +63,14 @@ class Lesson(models.Model):
         blank=True,
         null=True,
     )
+    owner = models.ForeignKey(
+        'users.User',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца",
+    )
 
     class Meta:
         verbose_name = "Урок"
