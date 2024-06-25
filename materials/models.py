@@ -78,8 +78,18 @@ class Lesson(models.Model):
 
 
 class Subscription(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Владелец', blank=True, null=True,)
-    course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, verbose_name='Курс')
+    user = models.ForeignKey(
+        'users.User',
+        on_delete=models.CASCADE,
+        verbose_name='Владелец',
+        blank=True,
+        null=True,
+    )
+    course = models.ForeignKey(
+        'materials.Course',
+        on_delete=models.CASCADE,
+        verbose_name='Курс'
+    )
 
     def __str__(self):
         return f'{self.user} - {self.course}'
