@@ -31,3 +31,19 @@ class PaymentsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ('paid_lesson', 'paid_course', 'pay_transfer')
     ordering_fields = ['pay_date']
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        product = create_stripe_product(payment.paid_course)
+        price = create_stripe_price(product=product, amount=payment.pay_sum)
+        session_id, session_url = create_stripe_session(price)
+        payment.session_id = session_id
+        payment.payment_link = session_url
+        payment.payment_status = check_status_stripe(payment.session_id)
+        payment.save()
+
+    @action(detail=True, methods=['get']) #доступно по адресу .../payments/<int:pk>/status/
+    def status(self, request, pk=None):
+        payment = self.get_object()
+        payment_status = check_status_stripe(payment.session_id)
+        return Response({"status": payment_status})
